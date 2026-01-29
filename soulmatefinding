@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>七日塔羅｜靈魂之友測驗</title>
+    <style>
+        :root { 
+            --gold: #d4af37; 
+            --deep-blue: #0a1128;
+            --purple: #673ab7;
+        }
+
+        body { 
+            font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif; 
+            margin: 0; 
+            padding: 20px; 
+            color: #ffffff; 
+            display: flex;
+            justify-content: center;
+            
+            /* 背景圖與遮罩設定 */
+            background: linear-gradient(rgba(10, 17, 40, 0.75), rgba(10, 17, 40, 0.75)), 
+                        url('螢幕擷取畫面 2026-01-29 140802.png'); /* 如果是jpg請自行改副檔名 */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-color: var(--deep-blue);
+        }
+
+        .container { width: 100%; max-width: 600px; z-index: 1; }
+
+        .card { 
+            background: rgba(255, 255, 255, 0.98); 
+            border-radius: 20px; 
+            padding: 30px; 
+            margin-bottom: 20px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5); 
+            color: #1a1a2e;
+            border: 1px solid var(--gold);
+            position: relative;
+        }
+
+        .header { border-top: 8px solid var(--gold); text-align: center; }
+
+        h1 { color: var(--deep-blue); margin: 0 0 10px; font-size: 24px; font-weight: 800; }
+        p { color: #555; margin: 0; font-size: 14px; letter-spacing: 1px; }
+
+        .q-title { font-weight: bold; margin-bottom: 20px; font-size: 17px; line-height: 1.6; border-left: 4px solid var(--gold); padding-left: 12px; }
+
+        .option { 
+            display: block; 
+            padding: 15px; 
+            border: 1px solid #e0e0e0; 
+            margin-bottom: 12px; 
+            border-radius: 12px; 
+            cursor: pointer; 
+            transition: all 0.3s ease; 
+            font-size: 15px;
+            background: #fff;
+        }
+
+        .option:hover { 
+            background-color: #fffdf5; 
+            border-color: var(--gold); 
+            transform: translateX(5px);
+        }
+
+        input[type="radio"] { margin-right: 12px; transform: scale(1.3); accent-color: var(--purple); }
+
+        button { 
+            background: var(--deep-blue);
+            color: var(--gold); 
+            border: 1px solid var(--gold); 
+            padding: 18px; 
+            border-radius: 12px; 
+            width: 100%; 
+            font-size: 18px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            transition: all 0.3s;
+            letter-spacing: 2px;
+        }
+
+        button:hover { 
+            background: var(--gold); 
+            color: var(--deep-blue);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+        }
+
+        #result-page { display: none; text-align: center; animation: slideUp 0.6s ease-out; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        .thanks-box { 
+            background: #fdfaf0; 
+            padding: 25px; 
+            border-radius: 15px; 
+            border: 1px dashed var(--gold);
+            line-height: 1.8;
+            text-align: left;
+            white-space: pre-wrap;
+            margin: 20px 0;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .re-btn { background: #333; color: #ccc; border: none; font-size: 14px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="quiz-page">
+        <div class="card header">
+            <h1>你是我的靈魂隊友嗎？</h1>
+            <p>✧ 相逢即是有緣，讓我為你占一題吧 ✧</p>
+        </div>
+        <div id="questions-list"></div>
+        <button onclick="checkScore()">提交答案，開啟契機</button>
+    </div>
+
+    <div id="result-page" class="card">
+        <h2 id="res-title" style="margin-top: 0; font-size: 26px;"></h2>
+        <div class="thanks-box" id="res-text"></div>
+        <p style="color: #999; font-size: 12px;">截圖後請透過 IG 或 LINE 聯繫</p>
+        <button class="re-btn" onclick="location.reload()">重新測驗</button>
+    </div>
+</div>
+
+<script>
+    const myQuestions = [
+        { q: "好友邀請您進入一個「好康群組」，點進去之後發現裡面上傳的影片疑似偷拍的性影像，此時您會？", opts: ["發現原來大家都這樣流傳，那我也必須回饋群組，不然不太厚道。", "直接退出群組，並告知朋友這是違法行為，請他也退出群組。", "群組那麼多人，我也只是跟著看而已，應該還好吧。", "公開這位朋友看外流影像的消息，反正他看起來不太注重隱私，現在也不是我朋友了。"], ans: 3 },
+        { q: "好友接受不孕症治療許久無果，聚餐時他開心地說終於存夠錢去國外找代理孕母了，您的想法是？", opts: ["為什麼非得要生小孩呢？養寵物不好嗎？", "還是不能接受用金錢購買別人身體的行為，勸他再想想。", "可惜台灣沒有開放，不然省下來的錢可以給孩子買好多東西。", "太好了，終於如願以償有自己的孩子了！"], ans: 1 },
+        { q: "對於女權主義，您的想法最接近何者？", opts: ["偏激女權是因為他們吃不到父權紅利，真正的好女權是要溫和推進議題，應該多推廣好女權的觀念。", "女權人士應該積極爭取女性服役，或是應在婚戀市場中主動分擔消費，因為要享受權利前必先盡該有的義務。", "女性主義有很多流派，主旨在解放被父權社會框架的所有人。", "女權一詞已經被過度濫用，變成性別對立無限上綱的詞彙，真正的關鍵應該在兩性互相尊重前提下達成的兩性平權。"], ans: 2 },
+        { q: "對於目前台灣主權現況，您的認知是？", opts: ["台灣與中國同根同源，自古以來就是中國不可分割的一部分。", "台灣早已事實獨立，從未被中國統治過，不必公開宣布自中華人民共和國獨立。", "中華民國僅為代管政權，台灣、澎湖主權在國際法上未定。", "中華民國就是台灣，台澎金馬就是中華民國領土。"], ans: 2 },
+        { q: "對於中國以及中國共產黨，您的看法最接近何者？", opts: ["台灣人應該抱持著開放的心態，與中國人民和平對等的交流。", "中國人民與中國共產黨應該分開看待，畢竟不是所有中國人都有入黨。", "台灣與中國同根同源，不應該以仇視心態看待彼此。", "反共不反中，到頭一場空。"], ans: 3 },
+        { q: "對於跨性別，您的想法是？", opts: ["法律強制要求手術變更性徵違反人權，性別是流動的，但手術結果不可逆。", "生理性別與外貌氣質無直接關係，只要不要造成他人困擾，都應尊重對方的行動。", "二元性別論是社會賦予的定義，人應該有定義自身性別的權利。", "性別不安的人應接受性別肯定手術後才可以申請性別變更，否則應被劃分為原生理性別。"], ans: 3 },
+        { q: "關於流浪動物，下列何者最接近您的看法？", opts: ["若無法為流浪動物提供一個永遠的家，就應該讓他們被環境自然淘汰。", "生命皆為平等，應該在行有餘力時為流浪動物提供溫飽。", "不會主動餵食，但會捐款給流浪動物愛心團體，讓專業團隊為流浪動物謀福祉。", "不主動接觸，但會捐款給TNR團體誘捕流浪動物結紮後原放。"], ans: 0 },
+        { q: "台灣政治長年藍綠為大宗，若要改變現有生態，有些人選擇將眼光投向小型政黨，對此您的看法是？", opts: ["只要政見可以改善人民生活，不管什麼黨派我都會願意投票給他們。", "只要台灣還處於被侵略的風險之下，就不可能將機會給小黨。", "如果有小黨提出的政見是貼近我生活所需的，會考慮將票投給小黨做做看。", "應該要多給不同傾向的小黨機會，才能逐步改變台灣政治生態。"], ans: 1 }
+    ];
+
+    const textFull = "【滿分回饋】\n你就是七日塔羅的靈魂之友！✨\n\n請「截圖本畫面」私訊七日塔羅\nIG: sevendaystarot 或 官方LINE: @473ijdyr\n即可兌換「一題文字占卜」。\n\n很高興能在茫茫人海中，遇見價值觀如此契合的你！🔮";
+    const textNotFull = "【測驗完成】\n感謝你願意花時間完成這次測驗。\n\n宇宙中每個靈魂都是獨一無二的，雖然我們的視角不盡相同，但這正是相遇的意義。\n\n祝福你在接下來的日子裡，都能順隨本心。🔮";
+
+    function initQuiz() {
+        const list = document.getElementById('questions-list');
+        myQuestions.forEach((item, i) => {
+            let html = `<div class="card"><div class="q-title">${i+1}. ${item.q}</div>`;
+            item.opts.forEach((o, oi) => {
+                html += `<label class="option"><input type="radio" name="q${i}" value="${oi}"> ${o}</label>`;
+            });
+            html += `</div>`;
+            list.innerHTML += html;
+        });
+    }
+
+    function checkScore() {
+        let score = 0;
+        let allDone = true;
+        myQuestions.forEach((item, i) => {
+            const picked = document.querySelector(`input[name="q${i}"]:checked`);
+            if (!picked) allDone = false;
+            else if (parseInt(picked.value) === item.ans) score++;
+        });
+
+        if (!allDone) { alert("還有題目沒填寫完畢喔！🔮"); return; }
+
+        document.getElementById('quiz-page').style.display = 'none';
+        document.getElementById('result-page').style.display = 'block';
+        window.scrollTo(0, 0);
+
+        const title = document.getElementById('res-title');
+        const text = document.getElementById('res-text');
+
+        if (score === 8) {
+            title.innerText = "⭐ 靈魂之友達成";
+            text.innerText = textFull;
+        } else {
+            title.innerText = "測驗完成";
+            text.innerText = textNotFull;
+        }
+    }
+    window.onload = initQuiz;
+</script>
+
+</body>
+</html>
